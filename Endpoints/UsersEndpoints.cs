@@ -28,6 +28,9 @@ public class UsersEndpoints
 
         // DELETE - REMOVE USER
         app.MapDelete($"{prefix}/{{id:int}}", DeleteUser);
+
+        // PUT - UPDATE USER
+        app.MapPut($"{prefix}/{{id:int}}", UpdateUser);
     }
 
     private static async Task GetUsers(HttpContext context)
@@ -114,6 +117,41 @@ public class UsersEndpoints
             );
         }
 
+
+        return Results.NotFound(
+            new { Message = $"No existe usuario con ID: {userId}" }
+        );
+    }
+
+    private static async Task<IResult> UpdateUser(HttpRequest req, HttpResponse res)
+    {
+        var userId = req.RouteValues["id"] as string;
+
+        if (userId == null || !int.TryParse(userId, out var id))
+        {
+            return Results.BadRequest(
+                new { Message = "Ingrese un ID correcto." }
+            );
+        }
+
+        if (!req.HasJsonContentType())
+        {
+            return Results.BadRequest(
+                new { Message = "Usuario es requerido." }
+            );
+        }
+
+        var user = await req.ReadFromJsonAsync<User>();
+        var idx = _users.FindIndex(u => u.Id == int.Parse(userId));
+
+        if (user != null && idx != -1)
+        {
+            _users[idx] = user;
+
+            return Results.Ok(
+                new { Message = "Usuario actualizado con exito.", user }
+            );
+        }
 
         return Results.NotFound(
             new { Message = $"No existe usuario con ID: {userId}" }
