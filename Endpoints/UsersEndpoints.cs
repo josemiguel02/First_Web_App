@@ -42,7 +42,7 @@ public class UsersEndpoints
     {
         var userId = request.RouteValues["id"] as string;
 
-        if (userId == null || !int.TryParse(userId, out var id))
+        if (userId == null || !int.TryParse(userId, out _))
         {
             response.StatusCode = StatusCodes.Status400BadRequest;
 
@@ -99,7 +99,7 @@ public class UsersEndpoints
     {
         var userId = req.RouteValues["id"] as string;
 
-        if (userId == null || !int.TryParse(userId, out var id))
+        if (userId == null || !int.TryParse(userId, out _))
         {
             return Results.BadRequest(
                 new { Message = "Ingrese un ID correcto." }
@@ -127,7 +127,7 @@ public class UsersEndpoints
     {
         var userId = req.RouteValues["id"] as string;
 
-        if (userId == null || !int.TryParse(userId, out var id))
+        if (userId == null || !int.TryParse(userId, out _))
         {
             return Results.BadRequest(
                 new { Message = "Ingrese un ID correcto." }
